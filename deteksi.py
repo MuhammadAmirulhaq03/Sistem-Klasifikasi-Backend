@@ -26,12 +26,7 @@ else:
 print(f"[INFO] Memuat model deteksi dari: {MODEL_PATH}")
 yolo_model = YOLO(MODEL_PATH, task="detect")
 
-db = BrondolanDB(
-    host="localhost",
-    user="root",
-    password="",
-    database="db_brondolan"
-)
+db = BrondolanDB()
 
 # ─────────────────────────────────────────
 # FLAGS & QUEUES

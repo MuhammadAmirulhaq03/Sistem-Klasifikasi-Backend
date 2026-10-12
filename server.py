@@ -13,12 +13,7 @@ CORS(app)
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
-db = BrondolanDB(
-    host="localhost",
-    user="root",
-    password="",
-    database="db_brondolan"
-)
+db = BrondolanDB()
 
 connected_clients = 0
 clients_lock = threading.Lock()

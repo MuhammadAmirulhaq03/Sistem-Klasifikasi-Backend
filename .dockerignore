@@ -1,0 +1,13 @@
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+kernel.errors.txt
+best_openvino_model/
+last.pt
+.vscode
+.idea

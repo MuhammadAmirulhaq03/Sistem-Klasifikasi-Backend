@@ -1,7 +1,10 @@
-opencv-python
+opencv-python-headless
 ultralytics
+onnxruntime
 flask
 flask-cors
+flask-socketio
+mysql-connector-python
 numpy
 requests
 pillow

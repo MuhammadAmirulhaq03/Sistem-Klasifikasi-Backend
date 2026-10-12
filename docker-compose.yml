@@ -1,0 +1,36 @@
+services:
+  # Database MySQL
+  db:
+    image: mysql:8.0
+    container_name: brondolan_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_brondolan
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 4s
+      timeout: 3s
+      retries: 10
+
+  # Backend Server & AI YOLO Stream
+  backend:
+    build: .
+    container_name: brondolan_backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: db_brondolan
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

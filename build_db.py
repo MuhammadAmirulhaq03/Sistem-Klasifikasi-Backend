@@ -1,5 +1,7 @@
-import mysql.connector
+import os
+import time
 import json
+import mysql.connector
 from datetime import datetime
 
 
@@ -7,24 +9,39 @@ class BrondolanDB:
 
     def __init__(
         self,
-        host="localhost",
-        user="root",
-        password="",
-        database="db_brondolan"
+        host=None,
+        user=None,
+        password=None,
+        database=None
     ):
-        self.conn = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database,
-            autocommit=True      # [FIX] Tidak perlu commit manual, setiap write langsung committed
-        )
+        self.host = host or os.getenv("DB_HOST", "localhost")
+        self.user = user or os.getenv("DB_USER", "root")
+        self.password = password if password is not None else os.getenv("DB_PASSWORD", "")
+        self.database = database or os.getenv("DB_NAME", "db_brondolan")
 
-        # cursor tetap untuk DDL saja
+        # Retry loop jika database masih booting (misal saat docker-compose start)
+        connected = False
+        for attempt in range(1, 15):
+            try:
+                self.conn = mysql.connector.connect(
+                    host=self.host,
+                    user=self.user,
+                    password=self.password,
+                    database=self.database,
+                    autocommit=True
+                )
+                connected = True
+                break
+            except Exception as e:
+                time.sleep(1.5)
+
+        if not connected:
+            raise ConnectionError(f"Gagal terhubung ke database MySQL ({self.host})")
+
         self.cursor = self.conn.cursor()
         self._create_table()
 
-        print("[INFO] MySQL connected")
+        print(f"[INFO] MySQL connected ({self.host})")
 
     def _create_table(self):
         self.cursor.execute("""

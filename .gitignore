@@ -1,0 +1,23 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large AI model files (>100MB ditolak GitHub)
+best.onnx
+best_openvino_model/
+*.bin
+last.pt
+
+# Log & Error files
+*.log
+kernel.errors.txt
+
+# Editor / IDE
+.vscode/
+.idea/

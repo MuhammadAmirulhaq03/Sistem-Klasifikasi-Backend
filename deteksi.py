@@ -16,6 +16,8 @@ CONF_THRESHOLD = 0.7
 # Prioritas ONNX Runtime (~13x lebih cepat di CPU dibanding OpenVINO pada laptop ini)
 if os.path.exists("best.onnx"):
     MODEL_PATH = "best.onnx"
+elif os.path.exists("best_int8.onnx"):
+    MODEL_PATH = "best_int8.onnx"
 elif os.path.exists("best_openvino_model"):
     MODEL_PATH = "best_openvino_model"
 else:

@@ -8,11 +8,20 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Large AI model files (>100MB ditolak GitHub)
+# Large AI model files & Checkpoints
+*.pt
 best.onnx
 best_openvino_model/
 *.bin
-last.pt
+
+# Unused heavy media
+brondolan.mp4
+
+# Unused legacy SDK & Docs
+Documentation/
+Source/
+test_mysql.py
+vimba_stream.py
 
 # Log & Error files
 *.log

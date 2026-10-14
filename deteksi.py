@@ -13,13 +13,15 @@ from build_db import BrondolanDB
 VIDEO_PATH = "test4.mp4"
 CONF_THRESHOLD = 0.7
 
-# Prioritas ONNX Runtime (~13x lebih cepat di CPU dibanding OpenVINO pada laptop ini)
-if os.path.exists("best.onnx"):
+# Prioritas Model: gunakan best.pt (akurasi penuh 640x640) jika ada
+if os.path.exists("best.pt"):
+    MODEL_PATH = "best.pt"
+elif os.path.exists("best.onnx"):
     MODEL_PATH = "best.onnx"
-elif os.path.exists("best_int8.onnx"):
-    MODEL_PATH = "best_int8.onnx"
 elif os.path.exists("best_openvino_model"):
     MODEL_PATH = "best_openvino_model"
+elif os.path.exists("best_int8.onnx"):
+    MODEL_PATH = "best_int8.onnx"
 else:
     MODEL_PATH = "best.pt"
 
@@ -234,8 +236,8 @@ def frame_reader():
 
                 frame_ready_event.set()
 
-            # Simpan hasil deteksi ke database MySQL secara berkala
-            if current_boxes and (idx % 8 == 0):
+            # Simpan hasil deteksi ke database MySQL secara berkala (stride 2 frame agar variasi kelas tersimpan merata)
+            if current_boxes and (idx % 2 == 0):
                 for b in current_boxes:
                     with counter_lock:
                         detection_counter += 1

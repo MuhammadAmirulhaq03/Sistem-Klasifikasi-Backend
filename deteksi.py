@@ -204,6 +204,8 @@ def frame_reader():
 
         frame_counter = 0
         last_fps_calc = time.time()
+        last_db_insert_time = time.time()
+        db_box_index = 0
         idx = 0
 
         while not stop_flag:
@@ -236,17 +238,21 @@ def frame_reader():
 
                 frame_ready_event.set()
 
-            # Simpan hasil deteksi ke database MySQL secara berkala (stride 2 frame agar variasi kelas tersimpan merata)
-            if current_boxes and (idx % 2 == 0):
-                for b in current_boxes:
-                    with counter_lock:
-                        detection_counter += 1
-                        curr_id = detection_counter
-                    db_queue.put({
-                        "id_deteksi": curr_id,
-                        "class_name": b["class_name"],
-                        "bbox": b["bbox"]
-                    })
+            # Mode Demo Santai: Simpan 1 deteksi ke database setiap 2.5 detik
+            now = time.time()
+            if current_boxes and (now - last_db_insert_time >= 2.5):
+                target_box = current_boxes[db_box_index % len(current_boxes)]
+                db_box_index += 1
+                last_db_insert_time = now
+
+                with counter_lock:
+                    detection_counter += 1
+                    curr_id = detection_counter
+                db_queue.put({
+                    "id_deteksi": curr_id,
+                    "class_name": target_box["class_name"],
+                    "bbox": target_box["bbox"]
+                })
 
             # Hitung FPS
             frame_counter += 1

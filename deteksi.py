@@ -215,8 +215,8 @@ def frame_reader():
             current_boxes = item["boxes"]
             capture_time = time.time()
 
-            # Gambar deteksi ke frame video secara instan (< 1ms)
-            annotated = draw_detections(frame_proc, current_boxes)
+            # Video demo test4.mp4 sudah memiliki bounding box visual asli; gunakan langsung agar tidak dobel kotak
+            annotated = frame_proc
 
             # Kompresi JPEG dengan kualitas 55 (ringan & cepat)
             ok, buffer = cv2.imencode(".jpg", annotated, [cv2.IMWRITE_JPEG_QUALITY, 55])
